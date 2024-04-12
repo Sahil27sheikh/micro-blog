@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: POST-SERVICE
+          uri: lb://POST-SERVICE
+          predicates:
+            - Path=/api/posts/**
+
+        - id: COMMENT-SERVICE
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/api/comments/**
+
+# config client configuration
+  config:
+    import: optional:configserver:http://localhost:8085
+
+
+#eureka:
+#  instance:
+#    preferIpAddress: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8083

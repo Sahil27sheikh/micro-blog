@@ -1,0 +1,10 @@
+eureka:
+  instance:
+    hostname: localhost # define the host type
+  client:
+    register-with-eureka: false # it is false because this not a client(microservice) it is a eureka server and we
+    # dont have to register this srever microservice itself and this property are by default true.
+    fetch-registry: false # it is also false because we dont want to fetch the server information itself.
+
+server:
+  port: 8761 # it is the default port number of eureka server.

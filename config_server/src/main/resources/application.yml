@@ -1,0 +1,12 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: CONFIG-SERVER
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Sahil27sheikh/Blog-App-Microservice-Configuration # this is the url of our git hub reposiroty.
+          clone-on-start: true
