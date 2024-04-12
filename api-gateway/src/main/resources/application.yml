@@ -1,0 +1,32 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes: # define a list of microservice routes.
+        - id: POST-SERVICE # This property assigns a unique identifier to the route for easier reference
+          uri: lb://POST-SERVICE # This property specifies the target URI (Uniform Resource Identifier) where the
+          # request will be forwarded. Here, the value lb:// indicates using a load balancer because we will user
+          # eureka server hear.
+          predicates: # This property defines conditions under which a specific route should be applied
+            - Path=/api/posts/** # matches requests based on the URL path. this is the path of out RestController.
+
+        - id: COMMENT-SERVICE
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/api/comments/** # if there are more than one controller present in the srvice then we will define
+                                    # there path simply by putting one comma.
+
+# registration of API Gateway on Eureka server because API Gateway is also a one microservice.
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka

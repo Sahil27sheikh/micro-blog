@@ -1,0 +1,62 @@
+spring:
+  application: # use to define the name of service.
+    name: COMMENT-SERVICE # defines the name of your microservice, which Eureka Server uses for service discovery and
+                          # make url dynamic.
+  datasource:
+    url: jdbc:mysql://localhost:3306/micro_comment
+    username: root
+    password: SAHIL@2705
+
+  # hibernate configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+    # Dialect
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQL8Dialect
+
+# chang the server
+server:
+  port: 8082
+
+# eureka client registration
+eureka:
+  instance:
+    prefer-ip-address: true # your Spring Boot microservice instructs the Eureka Server to register the microservice using its IP address instead of its hostname.
+  client:
+    register-with-eureka: true # tells your microservice to register itself with the Eureka Server.
+    fetch-registry: true # instructs your microservice to fetch service registry information from the Eureka Server. the value is true because this microservice is a client not a server.
+    service-url:
+      defaultZone: http://localhost:8761/eureka # specifies the URL of your Eureka Server, which is typically running on port 8761 with the /eureka context path.
+
+# circuit breaker implementation.
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+  endpoint:
+    health:
+      show-details: always
+
+# Resilience4j Configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      postBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
